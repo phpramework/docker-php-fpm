@@ -2,22 +2,14 @@ FROM php:7.0.12-fpm
 
 MAINTAINER phpramework <phpramework@gmail.com>
 
-RUN apk update --no-cache \
-    && apk add --no-cache \
-        su-exec
+RUN apt-get update
 
-RUN apk add --no-cache  --virtual .pecl-deps \
-        autoconf \
-        gcc \
-        make \
-        musl-dev \
-    && pecl install --onlyreqdeps apcu \
+RUN pecl install --onlyreqdeps apcu \
     && docker-php-ext-enable apcu \
     && docker-php-ext-install \
         mysqli \
         opcache \
-        pdo_mysql \
-    && apk del --no-cache --purge -r .pecl-deps
+        pdo_mysql
 
 RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
     && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/linux/amd64/$version \
