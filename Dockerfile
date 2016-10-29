@@ -3,7 +3,10 @@ FROM php:7.0.12-fpm-alpine
 MAINTAINER phpramework <phpramework@gmail.com>
 
 RUN apk update --no-cache \
-    && apk add --no-cache  --virtual .pecl-deps \
+    && apk add --no-cache \
+        su-exec
+
+RUN apk add --no-cache  --virtual .pecl-deps \
         autoconf \
         gcc \
         make \
