@@ -21,7 +21,8 @@ RUN apk add --no-cache  --virtual .ext-deps \
         pdo_mysql \
     && apk del --no-cache --purge -r .ext-deps
 
-RUN printf "date.timezone = UTC\n" > $PHP_INI_DIR/conf.d/timezone-utc.ini
+RUN printf "date.timezone = UTC\n" >> $PHP_INI_DIR/conf.d/99-custom.ini
+RUN printf "apc.enable_cli = 1\n" >> $PHP_INI_DIR/conf.d/99-custom.ini
 
 RUN mkdir -p /project
 
