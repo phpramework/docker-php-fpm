@@ -4,11 +4,11 @@ MAINTAINER phpramework <phpramework@gmail.com>
 
 RUN apk update --no-cache \
     && apk add --no-cache \
+        icu-dev \
         su-exec
 
 RUN apk add --no-cache  --virtual .ext-deps \
         autoconf \
-        icu-dev \
         gcc \
         make \
         musl-dev \
