@@ -12,14 +12,13 @@ RUN apk add --no-cache  --virtual .ext-deps \
         gcc \
         make \
         musl-dev \
-    && pecl install --onlyreqdeps apcu \
-    && docker-php-ext-enable apcu \
+    && pecl install --onlyreqdeps apcu redis \
+    && docker-php-ext-enable apcu redis \
     && docker-php-ext-install \
         intl \
         mysqli \
         opcache \
         pdo_mysql \
-        redis \
     && apk del --no-cache --purge -r .ext-deps
 
 RUN printf "date.timezone = UTC\n" >> $PHP_INI_DIR/conf.d/99-custom.ini
