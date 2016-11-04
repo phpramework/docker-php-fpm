@@ -27,10 +27,11 @@ RUN mkdir -p /opt \
     && curl -L https://s3-eu-west-1.amazonaws.com/tideways/extension/4.0.6/tideways-php-4.0.6-x86_64.tar.gz > /tmp/tideways-php-4.0.6-x86_64.tar.gz \
     && tar xvfz /tmp/tideways-php-4.0.6-x86_64.tar.gz -C /opt \
     && cd /opt/tideways-php-4.0.6 \
-    && bash install.sh
+    && bash install.sh \
+    && printf "extension = tideways.so\ntideways.auto_prepend_library=0\n" >> $PHP_INI_DIR/conf.d/tideways.ini
 
-RUN printf "date.timezone = UTC\n" >> $PHP_INI_DIR/conf.d/99-custom.ini
-RUN printf "apc.enable_cli = 1\n" >> $PHP_INI_DIR/conf.d/99-custom.ini
+RUN printf "date.timezone = UTC\n" >> $PHP_INI_DIR/conf.d/99-custom.ini \
+    && printf "apc.enable_cli = 1\n" >> $PHP_INI_DIR/conf.d/99-custom.ini
 
 RUN mkdir -p /project
 
