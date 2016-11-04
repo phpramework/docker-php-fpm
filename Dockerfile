@@ -22,7 +22,8 @@ RUN apk add --no-cache  --virtual .ext-deps \
         pdo_mysql \
     && apk del --no-cache --purge -r .ext-deps
 
-RUN curl -L https://s3-eu-west-1.amazonaws.com/tideways/extension/4.0.6/tideways-php-4.0.6-x86_64.tar.gz > /tmp/tideways-php-4.0.6-x86_64.tar.gz \
+RUN mkdir -p /opt \
+    && curl -L https://s3-eu-west-1.amazonaws.com/tideways/extension/4.0.6/tideways-php-4.0.6-x86_64.tar.gz > /tmp/tideways-php-4.0.6-x86_64.tar.gz \
     && tar xvfz /tmp/tideways-php-4.0.6-x86_64.tar.gz -C /opt \
     && cd /opt/tideways-php-4.0.6 \
     && ./opt/tideways-php-4.0.6/install.sh
