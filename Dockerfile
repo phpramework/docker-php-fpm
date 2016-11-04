@@ -5,7 +5,8 @@ MAINTAINER phpramework <phpramework@gmail.com>
 RUN apk update --no-cache \
     && apk add --no-cache \
         icu-dev \
-        su-exec
+        su-exec \
+        tar
 
 RUN apk add --no-cache  --virtual .ext-deps \
         autoconf \
@@ -20,6 +21,12 @@ RUN apk add --no-cache  --virtual .ext-deps \
         opcache \
         pdo_mysql \
     && apk del --no-cache --purge -r .ext-deps
+
+RUN mkdir -p /opt/tideways \
+    && curl -L https://s3-eu-west-1.amazonaws.com/tideways/extension/4.0.6/tideways-php-4.0.6-x86_64.tar.gz > /tmp/tideways-php-4.0.6-x86_64.tar.gz \
+    && tar -xvfz /tmp/tideways-php-4.0.6-x86_64.tar.gz -C /opt/tideways \
+    && cd /opt/tideways \
+    && ./opt/tideways/install.sh
 
 RUN printf "date.timezone = UTC\n" >> $PHP_INI_DIR/conf.d/99-custom.ini
 RUN printf "apc.enable_cli = 1\n" >> $PHP_INI_DIR/conf.d/99-custom.ini
