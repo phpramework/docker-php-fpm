@@ -7,6 +7,7 @@ ENV TIDEWAYS_VERSION=4.1.1
 RUN apk update --no-cache \
     && apk add --no-cache \
         bash \
+        coreutils \
         icu-dev \
         su-exec \
         tar \
