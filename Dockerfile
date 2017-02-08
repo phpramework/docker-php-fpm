@@ -1,13 +1,16 @@
-FROM php:7.0.12-fpm-alpine
+FROM php:7.1.1-fpm-alpine
 
 MAINTAINER phpramework <phpramework@gmail.com>
+
+ENV TIDEWAYS_VERSION=4.1.1
 
 RUN apk update --no-cache \
     && apk add --no-cache \
         bash \
         icu-dev \
         su-exec \
-        tar
+        tar \
+        tini
 
 RUN apk add --no-cache  --virtual .ext-deps \
         autoconf \
@@ -24,20 +27,16 @@ RUN apk add --no-cache  --virtual .ext-deps \
     && apk del --no-cache --purge -r .ext-deps
 
 RUN mkdir -p /opt \
-    && curl -L https://s3-eu-west-1.amazonaws.com/tideways/extension/4.0.6/tideways-php-4.0.6-x86_64.tar.gz > /tmp/tideways-php-4.0.6-x86_64.tar.gz \
-    && tar xvfz /tmp/tideways-php-4.0.6-x86_64.tar.gz -C /opt \
-    && cd /opt/tideways-php-4.0.6 \
+    && curl -L https://s3-eu-west-1.amazonaws.com/tideways/extension/$TIDEWAYS_VERSION/tideways-php-$TIDEWAYS_VERSION-x86_64.tar.gz > /tmp/tideways-php.tar.gz \
+    && tar xvfz /tmp/tideways-php.tar.gz -C /opt \
+    && cd /opt/tideways-php-$TIDEWAYS_VERSION \
     && bash install.sh \
     && printf "extension = tideways.so\ntideways.auto_prepend_library=0\n" >> $PHP_INI_DIR/conf.d/tideways.ini
 
 RUN printf "date.timezone = UTC\n" >> $PHP_INI_DIR/conf.d/99-custom.ini \
     && printf "apc.enable_cli = 1\n" >> $PHP_INI_DIR/conf.d/99-custom.ini
 
-RUN mkdir -p /project
-
 VOLUME ["/project"]
 WORKDIR /project
 
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-
-CMD ["entrypoint.sh", "php-fpm"]
+ENTRYPOINT ["/sbin/tini", "--"]
